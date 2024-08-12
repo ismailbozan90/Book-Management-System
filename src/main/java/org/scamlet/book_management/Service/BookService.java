@@ -26,13 +26,17 @@ public class BookService {
 
     public Optional<List<BookDTO>> getBookList() {
         List<Book> bookList = bookRepository.findAll();
+        if (bookList.isEmpty()) {
+            throw new BookException("No books found");
+        }
         return Optional.of(bookList.stream().map(book -> modelMapper.map(book, BookDTO.class)).toList());
     }
 
     public Optional<BookDTO> createBook(Book book) {
         try {
             Book createdBook = bookRepository.save(book);
-            return Optional.of(modelMapper.map(createdBook, BookDTO.class));
+            BookDTO bookDTO = modelMapper.map(createdBook, BookDTO.class);
+            return Optional.of(bookDTO);
         } catch (Exception e) {
             throw new BookException("Book could not be created! \n" +e.getMessage());
         }
@@ -47,7 +51,8 @@ public class BookService {
                 bookToUpdate.setAuthor(book.getAuthor());
                 bookToUpdate.setPrice(book.getPrice());
                 bookRepository.save(bookToUpdate);
-                return Optional.of(modelMapper.map(bookToUpdate, BookDTO.class));
+                BookDTO bookDTO = modelMapper.map(bookToUpdate, BookDTO.class);
+                return Optional.of(bookDTO);
             } catch (Exception e) {
                 throw new BookException("Book could not be updated! \n" +e.getMessage());
             }
@@ -60,7 +65,8 @@ public class BookService {
         if (findBook.isPresent()) {
             try {
                 bookRepository.deleteById(id);
-                return Optional.of(modelMapper.map(findBook.get(), BookDTO.class));
+                BookDTO bookDTO = modelMapper.map(findBook.get(), BookDTO.class);
+                return Optional.of(bookDTO);
             } catch (Exception e) {
                 throw new BookException("Book could not be deleted! \n" +e.getMessage());
             }

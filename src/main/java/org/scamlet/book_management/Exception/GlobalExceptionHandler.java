@@ -10,12 +10,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({BookException.class})
     public ResponseEntity<Object> handleBookException(BookException ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
     @ExceptionHandler({RuntimeException.class})
     public ResponseEntity<Object> handleRuntimeException(RuntimeException e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
 }
